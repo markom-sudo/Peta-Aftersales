@@ -256,13 +256,28 @@ function distBlockHtml(d) {
     .map(([status, jumlah]) => `<span class="status-chip ${kelasStatus(status)}">${escapeHtml(status)}: ${jumlah}</span>`)
     .join('');
 
-  const caseRows = (d.kasus || []).map(k => `
+  const belumSelesai = Object.entries(d.statusBreakdown || {})
+    .filter(([status]) => kelasStatus(status) !== 'status-selesai')
+    .reduce((sum, [, jumlah]) => sum + jumlah, 0);
+
+  // kasus yang belum selesai ditaruh di atas, biar langsung kelihatan tanpa scroll
+  const kasusSorted = [...(d.kasus || [])].sort((a, b) => {
+    const aSelesai = kelasStatus(a.statusServis) === 'status-selesai' ? 1 : 0;
+    const bSelesai = kelasStatus(b.statusServis) === 'status-selesai' ? 1 : 0;
+    return aSelesai - bSelesai;
+  });
+
+  const caseRows = kasusSorted.map(k => `
     <div class="case-row">
       <div class="case-main">
         <span class="case-produk">${escapeHtml(k.produk || '-')}${k.noSeri ? ' · ' + escapeHtml(k.noSeri) : ''}</span>
         <span class="status-chip ${kelasStatus(k.statusServis)}">${escapeHtml(k.statusServis)}</span>
       </div>
-      ${k.kategori ? `<span>${escapeHtml(k.kategori)}</span>` : ''}
+      <div class="case-meta">
+        ${k.kategori ? `<span class="case-kategori">${escapeHtml(k.kategori)}</span>` : ''}
+        ${k.statusUnit ? `<span class="case-garansi">${escapeHtml(k.statusUnit)}</span>` : ''}
+      </div>
+      ${k.keluhan ? `<div class="case-keluhan">${escapeHtml(k.keluhan)}</div>` : ''}
       ${k.sumberNama === 'fallback_customer' ? '<span class="case-note">*nama distributor dari data historis (kolom customer), bukan kolom distributor</span>' : ''}
     </div>`).join('');
 
@@ -274,8 +289,9 @@ function distBlockHtml(d) {
         <span class="dist-name">${escapeHtml(d.nama)}</span>
         <span class="dist-total-badge">${d.totalKomplain} komplain</span>
       </div>
+      ${belumSelesai > 0 ? `<div class="pending-badge">${belumSelesai} belum selesai</div>` : ''}
       <div class="status-chips">${chips}</div>
-      <button class="case-toggle" data-target="${distId}">Lihat ${d.kasus.length} kasus &darr;</button>
+      <button class="case-toggle" data-target="${distId}" data-count="${kasusSorted.length}">Lihat ${kasusSorted.length} kasus</button>
       <div class="case-list" id="${distId}">${caseRows}</div>
     </div>`;
 }
@@ -285,9 +301,8 @@ function bindCaseToggles(scope) {
     btn.addEventListener('click', () => {
       const target = document.getElementById(btn.dataset.target);
       const open = target.classList.toggle('open');
-      btn.innerHTML = open
-        ? btn.innerHTML.replace('&darr;', '&uarr;')
-        : btn.innerHTML.replace('&uarr;', '&darr;');
+      const count = btn.dataset.count;
+      btn.textContent = open ? `Sembunyikan ${count} kasus` : `Lihat ${count} kasus`;
     });
   });
 }
