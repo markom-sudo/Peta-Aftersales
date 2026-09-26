@@ -309,3 +309,10 @@ html, body {
 }
 .case-garansi { background: #eaf2fb; color: #1f5fa8; }
 .case-keluhan { font-size: 12px; color: #555; margin-top: 5px; line-height: 1.4; }
+
+.case-group-title {
+  font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase;
+  letter-spacing: 0.4px; margin: 12px 0 4px; padding-top: 8px; border-top: 1px solid #f0f0f0;
+}
+.case-group-title:first-child { border-top: none; padding-top: 0; margin-top: 8px; }
+.case-tanggal { font-size: 10.5px; padding: 2px 8px; border-radius: 8px; background: #f5f5f5; color: #888; }
