@@ -251,37 +251,52 @@ function openPanelForDistributor(distributor) {
   showPanel();
 }
 
+function formatTanggal(t) {
+  if (!t) return '';
+  const d = new Date(t);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
 function distBlockHtml(d) {
   const chips = Object.entries(d.statusBreakdown || {})
     .map(([status, jumlah]) => `<span class="status-chip ${kelasStatus(status)}">${escapeHtml(status)}: ${jumlah}</span>`)
     .join('');
 
-  const belumSelesai = Object.entries(d.statusBreakdown || {})
-    .filter(([status]) => kelasStatus(status) !== 'status-selesai')
-    .reduce((sum, [, jumlah]) => sum + jumlah, 0);
+  const semua = d.kasus || [];
+  const belum = semua.filter(k => kelasStatus(k.statusServis) !== 'status-selesai');
+  const selesai = semua.filter(k => kelasStatus(k.statusServis) === 'status-selesai');
 
-  // kasus yang belum selesai ditaruh di atas, biar langsung kelihatan tanpa scroll
-  const kasusSorted = [...(d.kasus || [])].sort((a, b) => {
-    const aSelesai = kelasStatus(a.statusServis) === 'status-selesai' ? 1 : 0;
-    const bSelesai = kelasStatus(b.statusServis) === 'status-selesai' ? 1 : 0;
-    return aSelesai - bSelesai;
-  });
+  // terbaru di atas -- tanggal kosong/tidak valid otomatis ditaruh paling bawah
+  const byTanggalTerbaru = (a, b) => {
+    const da = new Date(a.tanggal).getTime() || 0;
+    const db = new Date(b.tanggal).getTime() || 0;
+    return db - da;
+  };
+  belum.sort(byTanggalTerbaru);
+  selesai.sort(byTanggalTerbaru);
 
-  const caseRows = kasusSorted.map(k => `
-    <div class="case-row">
-      <div class="case-main">
-        <span class="case-produk">${escapeHtml(k.produk || '-')}${k.noSeri ? ' · ' + escapeHtml(k.noSeri) : ''}</span>
-        <span class="status-chip ${kelasStatus(k.statusServis)}">${escapeHtml(k.statusServis)}</span>
-      </div>
-      <div class="case-meta">
-        ${k.kategori ? `<span class="case-kategori">${escapeHtml(k.kategori)}</span>` : ''}
-        ${k.statusUnit ? `<span class="case-garansi">${escapeHtml(k.statusUnit)}</span>` : ''}
-      </div>
-      ${k.keluhan ? `<div class="case-keluhan">${escapeHtml(k.keluhan)}</div>` : ''}
-      ${k.sumberNama === 'fallback_customer' ? '<span class="case-note">*nama distributor dari data historis (kolom customer), bukan kolom distributor</span>' : ''}
-    </div>`).join('');
+  const renderGroup = (label, list) => {
+    if (list.length === 0) return '';
+    const rows = list.map(k => `
+      <div class="case-row">
+        <div class="case-main">
+          <span class="case-produk">${escapeHtml(k.produk || '-')}${k.noSeri ? ' · ' + escapeHtml(k.noSeri) : ''}</span>
+          <span class="status-chip ${kelasStatus(k.statusServis)}">${escapeHtml(k.statusServis)}</span>
+        </div>
+        <div class="case-meta">
+          ${formatTanggal(k.tanggal) ? `<span class="case-tanggal">${formatTanggal(k.tanggal)}</span>` : ''}
+          ${k.kategori ? `<span class="case-kategori">${escapeHtml(k.kategori)}</span>` : ''}
+          ${k.statusUnit ? `<span class="case-garansi">${escapeHtml(k.statusUnit)}</span>` : ''}
+        </div>
+        ${k.keluhan ? `<div class="case-keluhan">${escapeHtml(k.keluhan)}</div>` : ''}
+        ${k.sumberNama === 'fallback_customer' ? '<span class="case-note">*nama distributor dari data historis (kolom customer), bukan kolom distributor</span>' : ''}
+      </div>`).join('');
+    return `<div class="case-group-title">${label} (${list.length})</div>${rows}`;
+  };
 
   const distId = 'dist-' + Math.random().toString(36).slice(2, 9);
+  const isiKasus = renderGroup('Belum Selesai', belum) + renderGroup('Selesai', selesai);
 
   return `
     <div class="dist-block" data-nama="${escapeAttr(d.nama)}">
@@ -289,10 +304,10 @@ function distBlockHtml(d) {
         <span class="dist-name">${escapeHtml(d.nama)}</span>
         <span class="dist-total-badge">${d.totalKomplain} komplain</span>
       </div>
-      ${belumSelesai > 0 ? `<div class="pending-badge">${belumSelesai} belum selesai</div>` : ''}
+      ${belum.length > 0 ? `<div class="pending-badge">${belum.length} belum selesai</div>` : ''}
       <div class="status-chips">${chips}</div>
-      <button class="case-toggle" data-target="${distId}" data-count="${kasusSorted.length}">Lihat ${kasusSorted.length} kasus</button>
-      <div class="case-list" id="${distId}">${caseRows}</div>
+      <button class="case-toggle" data-target="${distId}" data-count="${semua.length}">Lihat ${semua.length} kasus</button>
+      <div class="case-list" id="${distId}">${isiKasus}</div>
     </div>`;
 }
 
