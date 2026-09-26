@@ -3,7 +3,7 @@
 // ======================================================================
 
 // GANTI dengan URL Web App hasil Deploy backend "Peta Aftersales" (yang barusan dites lewat jalankanTes).
-const GAS_URL = 'GANTI_DENGAN_URL_EXEC_PETA_AFTERSALES';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwQKmNT-H9UBsYqXLMqFNFuXmzxYIz6lKqI0lz-f6IYWo3xoWXdyxoGle9D3uht3TCz/exec';
 // Geojson yang SAMA persis dipakai Peta Distributor -- copy file-nya ke assets/ folder ini juga.
 const GEOJSON_PATH = 'assets/indonesia-provinces-elitech.geojson';
 
