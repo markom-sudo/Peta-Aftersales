@@ -46,9 +46,41 @@ const state = {
 };
 
 // ----------------------------------------------------------------------
+// Tema (terang / gelap)
+// Skala warna peta berbeda per tema: di tema terang, makin banyak komplain makin
+// pekat (oranye tua di atas putih). Di tema gelap, makin banyak komplain makin
+// TERANG (oranye menyala di atas latar gelap), supaya "lebih terlihat = lebih banyak".
+// ----------------------------------------------------------------------
+function isDark() {
+  return document.documentElement.getAttribute('data-theme') === 'dark';
+}
+
+function makeColorScale() {
+  const domain = [0, Math.max(state.maxTotal, 1)];
+  return isDark()
+    ? d3.scaleSequential(d3.interpolateRgb('#4a3426', '#ffa24d')).domain(domain)
+    : d3.scaleSequential(d3.interpolateOranges).domain(domain);
+}
+
+// Dipanggil setiap tema berganti (lewat window.__setTheme di <head>)
+function repaintTheme() {
+  if (!state.geojson) return;               // data belum siap; renderMap akan memakai skala yang benar
+  state.colorScale = makeColorScale();
+  d3.selectAll('.province-path').attr('fill', d => warnaProvinsi(d.properties.provinsi));
+  renderLegend();
+}
+window.__onTheme = repaintTheme;
+
+// ----------------------------------------------------------------------
 // Boot
 // ----------------------------------------------------------------------
 init();
+
+// Lapor ke shell (kalau dibuka di dalam iframe) bahwa halaman sudah siap,
+// baik berhasil maupun gagal memuat data.
+function notifyReady() {
+  if (window.parent !== window) window.parent.postMessage({ __elitechReady: 'peta' }, '*');
+}
 
 async function init() {
   try {
@@ -73,6 +105,7 @@ async function init() {
     document.getElementById('mapStage').innerHTML =
       '<p style="text-align:center;margin-top:40px;color:#999">Gagal memuat data peta aftersales. Coba muat ulang halaman.</p>';
   }
+  notifyReady();
 }
 
 // ----------------------------------------------------------------------
@@ -97,8 +130,7 @@ function buildIndices() {
     if (total > state.maxTotal) state.maxTotal = total;
   });
 
-  state.colorScale = d3.scaleSequential(d3.interpolateOranges)
-    .domain([0, Math.max(state.maxTotal, 1)]);
+  state.colorScale = makeColorScale();
 
   // ---- Search index: provinsi + nama distributor ----
   const idx = [];
@@ -115,11 +147,15 @@ function renderNonDistBadge() {
   document.getElementById('nonDistCount').textContent = state.tidakDiketahui.totalKomplain;
 }
 
+// Gradien legend diambil dari skala yang sedang dipakai, jadi selalu cocok dengan warna peta
+// di kedua tema.
 function renderLegend() {
   const legend = document.getElementById('legend');
+  const mx = Math.max(state.maxTotal, 1);
+  const stops = [0, 0.25, 0.5, 0.75, 1].map(t => state.colorScale(t * mx)).join(',');
   legend.innerHTML = `
     <div class="legend-title">Beban komplain distributor</div>
-    <div class="legend-bar"></div>
+    <div class="legend-bar" style="background:linear-gradient(to right,${stops})"></div>
     <div class="legend-scale"><span>0</span><span>${state.maxTotal}</span></div>
   `;
 }
@@ -454,6 +490,16 @@ function escapeHtml(str) {
 }
 function escapeAttr(str) { return escapeHtml(str); }
 function cssEscape(str) { return String(str).replace(/["\\]/g, '\\$&'); }
+
+// ----------------------------------------------------------------------
+// Pesan dari shell (halaman induk): tema. Mode Presentasi diabaikan di sini
+// karena peta ini tidak menampilkan harga.
+// ----------------------------------------------------------------------
+window.addEventListener('message', e => {
+  if (e.source !== window.parent) return;
+  const d = e.data;
+  if (d && d.__elitech === 'theme' && window.__setTheme) window.__setTheme(d.theme);
+});
 
 // ----------------------------------------------------------------------
 // Service worker (sw.js harus ada di folder yang sama dengan index.html ini)
