@@ -1,13 +1,162 @@
+/* ======================================================================
+   PETA AFTERSALES ELITECH — style.css (terang + gelap dalam satu file)
+   Semua warna lewat variabel. Tema dipilih oleh atribut
+   <html data-theme="light|dark"> yang dipasang di <head> index.html.
+   Untuk mengubah warna tema gelap, cukup edit blok :root[data-theme="dark"].
+   ====================================================================== */
+
 :root {
+  color-scheme: light;
+
+  /* peta */
   --map-idle: #e4e4e4;
   --map-border: #ffffff;
   --map-selected-outline: #1f3a5f;
+  --map-hover-stroke: #ffffff;
+  --hover-filter: brightness(0.9);
+
+  /* dasar */
+  --bg: #ffffff;
   --ink: #4a4a4a;
+  --text-strong: #333333;
+  --text-mid: #555555;
+  --muted: #999999;
+  --faint: #aaaaaa;
+  --line: #eeeeee;
+  --accent: #1f3a5f;
+
+  /* header & pencarian */
+  --topbar-bg: transparent;
+  --title: #5a5a5a;
+  --title-shadow: 2px 3px 0 rgba(0,0,0,0.15);
+  --subtitle: #8a8a8a;
+  --input-bg: #ffffff;
+  --input-fg: #333333;
+  --placeholder: #b6b6b6;
+  --btn-bg: var(--accent);
+  --btn-fg: #ffffff;
+  --dd-bg: #ececec;
+  --item-bg: #e2e2e2;
+  --item-hover: #d3d3d3;
+  --item-fg: #4a4a4a;
+  --badge-bg: #1f3a5f;
+  --badge-fg: #ffffff;
+  --nondist-bg: #f0e6d2;
+  --nondist-fg: #7a5c1e;
+
+  /* label hover & legend */
+  --label-bg: rgba(255,255,255,0.95);
+  --label-fg: var(--accent);
+  --legend-bg: rgba(255,255,255,0.92);
+  --legend-fg: #666666;
+  --legend-title: #555555;
+
+  /* panel */
+  --overlay: rgba(0,0,0,0.15);
   --panel-bg: #ffffff;
   --panel-header-bg: #8a8a8a;
-  --accent: #1f3a5f;
+  --panel-header-fg: #ffffff;
+  --caveat-bg: #fdf3e0;
+  --caveat-fg: #a06b1f;
+  --pending-bg: #fde0e0;
+  --pending-fg: #b71c1c;
+
+  /* chip status */
+  --chip-bg: #eef1f5;
+  --chip-fg: #444444;
+  --ok-bg: #dff0d8;
+  --ok-fg: #2e7d32;
+  --proc-bg: #f3e5f5;
+  --proc-fg: #6a1b9a;
+  --bad-bg: #fde0e0;
+  --bad-fg: #b71c1c;
+
+  /* daftar kasus */
+  --toggle-bg: none;
+  --tag-bg: #f0f0f0;
+  --tag-fg: #666666;
+  --garansi-bg: #eaf2fb;
+  --garansi-fg: #1f5fa8;
+  --date-bg: #f5f5f5;
+  --date-fg: #888888;
+
+  /* toast */
+  --toast-bg: #2b2b2b;
+  --toast-fg: #ffffff;
+
   --transition-fast: 160ms ease;
   --transition-zoom: 700ms cubic-bezier(.2,.8,.2,1);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --map-idle: #2a2f3d;
+  --map-border: #0f1117;
+  --map-selected-outline: #e8eaf0;
+  --map-hover-stroke: #e8eaf0;
+  --hover-filter: brightness(1.2);
+
+  --bg: #0f1117;
+  --ink: #e8eaf0;
+  --text-strong: #e8eaf0;
+  --text-mid: #c3c8d4;
+  --muted: #a3a9b8;
+  --faint: #6f7686;
+  --line: #2c3142;
+  --accent: #8da2f7;
+
+  --topbar-bg: #171a23;
+  --title: #e8eaf0;
+  --title-shadow: none;
+  --subtitle: #a3a9b8;
+  --input-bg: #1e2230;
+  --input-fg: #e8eaf0;
+  --placeholder: #6f7686;
+  --btn-fg: #0f1117;
+  --dd-bg: #171a23;
+  --item-bg: #1e2230;
+  --item-hover: #262b3b;
+  --item-fg: #e8eaf0;
+  --badge-bg: #222a4a;
+  --badge-fg: #8da2f7;
+  --nondist-bg: #1e2230;
+  --nondist-fg: #e8eaf0;
+
+  --label-bg: #2b3042;
+  --label-fg: #e8eaf0;
+  --legend-bg: rgba(23,26,35,0.92);
+  --legend-fg: #a3a9b8;
+  --legend-title: #e8eaf0;
+
+  --overlay: rgba(0,0,0,0.6);
+  --panel-bg: #171a23;
+  --panel-header-bg: #171a23;
+  --panel-header-fg: #e8eaf0;
+  --caveat-bg: #3a2a12;
+  --caveat-fg: #f3c987;
+  --pending-bg: #3a2a12;
+  --pending-fg: #f3c987;
+
+  --chip-bg: #262b3b;
+  --chip-fg: #c3c8d4;
+  --ok-bg: #16301f;
+  --ok-fg: #8fdca6;
+  --proc-bg: #3a2a12;
+  --proc-fg: #f3c987;
+  --bad-bg: #3b1c20;
+  --bad-fg: #f2a3a9;
+
+  --toggle-bg: #222a4a;
+  --tag-bg: #262b3b;
+  --tag-fg: #a3a9b8;
+  --garansi-bg: #222a4a;
+  --garansi-fg: #8da2f7;
+  --date-bg: #262b3b;
+  --date-fg: #a3a9b8;
+
+  --toast-bg: #e8eaf0;
+  --toast-fg: #14151a;
 }
 
 * { box-sizing: border-box; }
@@ -18,15 +167,17 @@ html, body {
   height: 100%;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-  background: #ffffff;
+  background: var(--bg);
   color: var(--ink);
 }
 
+/* ---------- Header & pencarian ---------- */
 .topbar {
   position: relative;
   z-index: 20;
   text-align: center;
   padding: 18px 16px 10px;
+  background: var(--topbar-bg);
 }
 
 .topbar h1 {
@@ -34,14 +185,14 @@ html, body {
   font-size: clamp(24px, 4.5vw, 48px);
   font-weight: 900;
   letter-spacing: 1px;
-  color: #5a5a5a;
-  text-shadow: 2px 3px 0 rgba(0,0,0,0.15);
+  color: var(--title);
+  text-shadow: var(--title-shadow);
 }
 
 .subtitle {
   margin: 4px 0 12px;
   font-style: italic;
-  color: #8a8a8a;
+  color: var(--subtitle);
   font-size: clamp(11px, 1.5vw, 13px);
   letter-spacing: 0.3px;
 }
@@ -59,10 +210,11 @@ html, body {
   border: none;
   box-shadow: 0 2px 10px rgba(0,0,0,0.12);
   font-size: 15px;
-  color: #333;
+  background: var(--input-bg);
+  color: var(--input-fg);
   outline: none;
 }
-#searchInput::placeholder { color: #b6b6b6; }
+#searchInput::placeholder { color: var(--placeholder); }
 
 #searchBtn {
   position: absolute;
@@ -72,8 +224,8 @@ html, body {
   width: 38px;
   border: none;
   border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +237,7 @@ html, body {
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background: #ececec;
+  background: var(--dd-bg);
   border-radius: 18px;
   padding: 6px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.18);
@@ -100,22 +252,22 @@ html, body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  background: #e2e2e2;
+  background: var(--item-bg);
   border: none;
   border-radius: 16px;
   padding: 11px 16px;
   margin: 4px 0;
   font-size: 13px;
-  color: #4a4a4a;
+  color: var(--item-fg);
   cursor: pointer;
   transition: background var(--transition-fast);
   text-align: left;
 }
-.search-item:hover { background: #d3d3d3; }
+.search-item:hover { background: var(--item-hover); }
 .search-item .badge {
   font-size: 11px;
-  color: #fff;
-  background: var(--accent);
+  color: var(--badge-fg);
+  background: var(--badge-bg);
   border-radius: 10px;
   padding: 2px 8px;
   flex-shrink: 0;
@@ -124,8 +276,8 @@ html, body {
 
 .non-dist-btn {
   margin-top: 12px;
-  background: #f0e6d2;
-  color: #7a5c1e;
+  background: var(--nondist-bg);
+  color: var(--nondist-fg);
   border: none;
   border-radius: 16px;
   padding: 8px 16px;
@@ -135,6 +287,7 @@ html, body {
 }
 .non-dist-btn span { font-weight: 800; }
 
+/* ---------- Peta ---------- */
 #mapStage {
   position: relative;
   width: 100%;
@@ -149,14 +302,14 @@ html, body {
   cursor: pointer;
   transition: filter var(--transition-fast), stroke-width var(--transition-fast);
 }
-.province-path.hovered { filter: brightness(0.9); }
+.province-path.hovered { filter: var(--hover-filter); stroke: var(--map-hover-stroke); }
 .province-path.selected { stroke: var(--map-selected-outline); stroke-width: 2.2; }
 
 .hover-label {
   position: absolute;
   pointer-events: none;
-  background: rgba(255,255,255,0.95);
-  color: var(--accent);
+  background: var(--label-bg);
+  color: var(--label-fg);
   font-weight: 700;
   font-size: 13px;
   padding: 4px 10px;
@@ -171,27 +324,28 @@ html, body {
   position: absolute;
   left: 14px;
   bottom: 14px;
-  background: rgba(255,255,255,0.92);
+  background: var(--legend-bg);
   border-radius: 10px;
   padding: 8px 12px;
   font-size: 11px;
-  color: #666;
+  color: var(--legend-fg);
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   max-width: 200px;
 }
-.legend .legend-title { font-weight: 700; color: #555; margin-bottom: 4px; }
+.legend .legend-title { font-weight: 700; color: var(--legend-title); margin-bottom: 4px; }
 .legend .legend-bar {
   height: 8px;
   border-radius: 4px;
   margin: 4px 0;
-  background: linear-gradient(to right, #fde5d1, #d9480f);
+  background: linear-gradient(to right, #fde5d1, #d9480f);  /* diganti JS (renderLegend) */
 }
 .legend .legend-scale { display: flex; justify-content: space-between; font-size: 10px; }
 
+/* ---------- Panel samping ---------- */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.15);
+  background: var(--overlay);
   z-index: 25;
   opacity: 0;
   pointer-events: none;
@@ -219,70 +373,72 @@ html, body {
 
 .panel-header {
   background: var(--panel-header-bg);
-  color: #fff;
+  color: var(--panel-header-fg);
   padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 .panel-header h2 { margin: 0; font-size: 18px; }
-#panelClose { background: none; border: none; color: #fff; font-size: 26px; line-height: 1; cursor: pointer; }
+#panelClose { background: none; border: none; color: var(--panel-header-fg); font-size: 26px; line-height: 1; cursor: pointer; }
 
 .panel-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
 
 .data-caveat {
   font-size: 11px;
-  color: #a06b1f;
-  background: #fdf3e0;
+  color: var(--caveat-fg);
+  background: var(--caveat-bg);
   border-radius: 8px;
   padding: 8px 10px;
   margin-bottom: 14px;
   line-height: 1.4;
 }
 
-.dist-block { border-bottom: 1px solid #eee; padding: 14px 0; }
+.dist-block { border-bottom: 1px solid var(--line); padding: 14px 0; }
 .dist-block:last-child { border-bottom: none; }
 .dist-name-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.dist-name { font-weight: 700; font-size: 15px; color: #333; }
+.dist-name { font-weight: 700; font-size: 15px; color: var(--text-strong); }
 .dist-total-badge {
-  background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
+  background: var(--badge-bg); color: var(--badge-fg); font-size: 12px; font-weight: 700;
   border-radius: 12px; padding: 3px 10px; flex-shrink: 0;
 }
 
 .status-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .status-chip {
-  font-size: 11px; padding: 4px 10px; border-radius: 12px; background: #eef1f5; color: #444;
+  font-size: 11px; padding: 4px 10px; border-radius: 12px; background: var(--chip-bg); color: var(--chip-fg);
 }
-.status-chip.status-selesai { background: #dff0d8; color: #2e7d32; }
-.status-chip.status-proses { background: #e1beed30; background: #f3e5f5; color: #6a1b9a; }
-.status-chip.status-belum { background: #fde0e0; color: #b71c1c; }
+.status-chip.status-selesai { background: var(--ok-bg); color: var(--ok-fg); }
+.status-chip.status-proses { background: var(--proc-bg); color: var(--proc-fg); }
+.status-chip.status-belum { background: var(--bad-bg); color: var(--bad-fg); }
 
 .case-toggle {
-  margin-top: 10px; background: none; border: none; color: var(--accent);
+  margin-top: 10px; background: var(--toggle-bg); border: none; color: var(--accent);
   font-size: 12.5px; font-weight: 600; cursor: pointer; padding: 0;
 }
+:root[data-theme="dark"] .case-toggle { padding: 4px 10px; border-radius: 10px; }
+
 .case-list { margin-top: 8px; display: none; }
 .case-list.open { display: block; }
 .case-row {
-  font-size: 12px; color: #555; padding: 7px 0; border-top: 1px dashed #eee;
+  font-size: 12px; color: var(--text-mid); padding: 7px 0; border-top: 1px dashed var(--line);
   display: flex; flex-direction: column; gap: 2px;
 }
 .case-row .case-main { display: flex; justify-content: space-between; gap: 8px; }
-.case-row .case-produk { font-weight: 600; color: #333; }
-.case-row .case-note { font-size: 10.5px; color: #aaa; font-style: italic; }
+.case-row .case-produk { font-weight: 600; color: var(--text-strong); }
+.case-row .case-note { font-size: 10.5px; color: var(--faint); font-style: italic; }
 
-.empty-note { color: #999; font-size: 13px; font-style: italic; }
+.empty-note { color: var(--muted); font-size: 13px; font-style: italic; }
 
 .nondist-list { margin: 0; padding: 0; list-style: none; }
 .nondist-row {
-  display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;
+  display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line);
   font-size: 13px;
 }
 .nondist-row .n { font-weight: 700; color: var(--accent); }
 
 .toast {
   position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-  background: #2b2b2b; color: #fff; padding: 10px 22px; border-radius: 20px;
+  background: var(--toast-bg); color: var(--toast-fg); padding: 10px 22px; border-radius: 20px;
   font-size: 13px; z-index: 60; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
 }
 .toast.hidden { display: none; }
@@ -300,19 +456,19 @@ html, body {
 }
 
 .pending-badge {
-  display: inline-block; margin-top: 8px; background: #fde0e0; color: #b71c1c;
+  display: inline-block; margin-top: 8px; background: var(--pending-bg); color: var(--pending-fg);
   font-size: 11.5px; font-weight: 700; border-radius: 10px; padding: 3px 10px;
 }
 .case-meta { display: flex; gap: 6px; margin-top: 4px; }
 .case-kategori, .case-garansi {
-  font-size: 10.5px; padding: 2px 8px; border-radius: 8px; background: #f0f0f0; color: #666;
+  font-size: 10.5px; padding: 2px 8px; border-radius: 8px; background: var(--tag-bg); color: var(--tag-fg);
 }
-.case-garansi { background: #eaf2fb; color: #1f5fa8; }
-.case-keluhan { font-size: 12px; color: #555; margin-top: 5px; line-height: 1.4; }
+.case-garansi { background: var(--garansi-bg); color: var(--garansi-fg); }
+.case-keluhan { font-size: 12px; color: var(--text-mid); margin-top: 5px; line-height: 1.4; }
 
 .case-group-title {
-  font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase;
-  letter-spacing: 0.4px; margin: 12px 0 4px; padding-top: 8px; border-top: 1px solid #f0f0f0;
+  font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.4px; margin: 12px 0 4px; padding-top: 8px; border-top: 1px solid var(--line);
 }
 .case-group-title:first-child { border-top: none; padding-top: 0; margin-top: 8px; }
-.case-tanggal { font-size: 10.5px; padding: 2px 8px; border-radius: 8px; background: #f5f5f5; color: #888; }
+.case-tanggal { font-size: 10.5px; padding: 2px 8px; border-radius: 8px; background: var(--date-bg); color: var(--date-fg); }
