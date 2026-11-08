@@ -454,3 +454,18 @@ function escapeHtml(str) {
 }
 function escapeAttr(str) { return escapeHtml(str); }
 function cssEscape(str) { return String(str).replace(/["\\]/g, '\\$&'); }
+
+// ----------------------------------------------------------------------
+// Service worker (sw.js harus ada di folder yang sama dengan index.html ini)
+// ----------------------------------------------------------------------
+if ('serviceWorker' in navigator) {
+  // kabar "versi baru" dari sw.js diteruskan ke shell supaya banner tampil di sana
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data && e.data.type === 'ELITECH_UPDATE' && window.parent !== window) {
+      window.parent.postMessage({ __elitechUpdate: true }, '*');
+    }
+  });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
